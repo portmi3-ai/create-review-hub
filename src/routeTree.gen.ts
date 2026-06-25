@@ -9,68 +9,49 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiConciergeRouteImport } from './routes/api/concierge'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiConciergeRoute = ApiConciergeRouteImport.update({
-  id: '/api/concierge',
-  path: '/api/concierge',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/api/concierge': typeof ApiConciergeRoute
+  '/': typeof AuthenticatedRouteRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/api/concierge': typeof ApiConciergeRoute
+  '/': typeof AuthenticatedRouteRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/api/concierge': typeof ApiConciergeRoute
+  '/_authenticated': typeof AuthenticatedRouteRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/api/concierge'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/api/concierge'
-  id: '__root__' | '/' | '/api/concierge'
+  to: '/'
+  id: '__root__' | '/_authenticated'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ApiConciergeRoute: typeof ApiConciergeRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/concierge': {
-      id: '/api/concierge'
-      path: '/api/concierge'
-      fullPath: '/api/concierge'
-      preLoaderRoute: typeof ApiConciergeRouteImport
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ApiConciergeRoute: ApiConciergeRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

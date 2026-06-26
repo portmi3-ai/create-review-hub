@@ -23,16 +23,22 @@ InvestorOS Review Hub is a secure investor room for Discharge Bridge by Mport Me
 
 Copy `.env.example` to `.env.local` for local development and set the same values in Netlify.
 
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_PUBLISHABLE_KEY=
-SUPABASE_URL=
-SUPABASE_PUBLISHABLE_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
-GEMINI_API_KEY=
-```
+Required:
+
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_PUBLISHABLE_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+
+Optional:
+
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL`
 
 `GEMINI_API_KEY` is optional. If it is not set, the concierge returns a grounded fallback answer from the built-in InvestorOS context.
+
+Do not expose `SUPABASE_SERVICE_ROLE_KEY` in client-side code. It should only exist in the server runtime.
 
 ## Supabase setup
 
@@ -60,6 +66,19 @@ values ('YOUR_USER_ID', 'admin')
 on conflict (user_id, role) do nothing;
 ```
 
+## RLS verification
+
+The migration enables RLS on all InvestorOS tables and separates access as follows:
+
+- investors can read their own profile
+- admins can read profiles
+- users can read their own roles
+- admins can manage roles
+- investors can read `Public` and `NDA` documents
+- admins can create, update, delete, and read all documents
+
+Static readiness tests assert that the required tables, functions, and policy names are present.
+
 ## Local development
 
 ```bash
@@ -67,13 +86,18 @@ npm install
 npm run dev
 ```
 
-## Checks
+## Readiness checks
 
 ```bash
-npm run typecheck
 npm run lint
 node --test tests/*.test.mjs
 npm run build
+```
+
+The branch also includes:
+
+```bash
+node scripts/readiness-check.mjs
 ```
 
 ## Netlify deployment
@@ -88,6 +112,10 @@ Publish directory: .output/public
 ```
 
 Set the environment variables from `.env.example` in Netlify before building.
+
+## CI checks
+
+See `docs/CI.md` for the GitHub Actions workflow. The connector blocked direct creation of `.github/workflows` in this session, so the workflow is documented for local or GitHub UI creation.
 
 ## Production notes
 

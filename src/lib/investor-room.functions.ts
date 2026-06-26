@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { activity, companyProfile, investors, metrics, roadmap } from "@/data/seed";
+import { getInvestorDocumentAsset } from "@/data/investor-documents";
 import { calculateInvestorPriority, classifyDocumentRisk } from "@/lib/scoring";
 
 const conciergeContext = `
@@ -34,17 +35,23 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       .eq("id", userId)
       .maybeSingle();
 
-    // RLS enforces: investors get NDA-only rows, admins get all.
     const { data: docRows, error: docErr } = await supabase
       .from("documents")
-      .select("id, title, type, status, access, views, owner, version")
+      .select("id, title, type, status, access, views, owner, version, slug")
       .order("created_at", { ascending: true });
     if (docErr) throw new Error(docErr.message);
 
-    const visibleDocs = (docRows ?? []).map((d) => ({
-      ...d,
-      risk: classifyDocumentRisk(d.status, d.access),
-    }));
+    const visibleDocs = (docRows ?? []).map((d) => {
+      const asset = getInvestorDocumentAsset(d.slug);
+      return {
+        ...d,
+        risk: classifyDocumentRisk(d.status, d.access),
+        summary: asset?.summary ?? "Document metadata is configured, but content has not been attached yet.",
+        downloadUrl: asset?.downloadUrl ?? null,
+        content: asset?.content ?? [],
+        checklist: asset?.checklist ?? [],
+      };
+    });
 
     const rankedInvestors = isAdmin
       ? investors
@@ -100,6 +107,26 @@ export const deleteDocument = createServerFn({ method: "POST" })
   .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("documents").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const trackDocumentView = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: current, error: readError } = await context.supabase
+      .from("documents")
+      .select("views")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (readError) throw new Error(readError.message);
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("documents")
+      .update({ views: (current?.views ?? 0) + 1 })
+      .eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

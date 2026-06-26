@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Activity,
   Bot,
   Building2,
   CheckCircle2,
+  Download,
+  ExternalLink,
   FileText,
   Gauge,
   GitPullRequest,
@@ -17,7 +19,7 @@ import {
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
 import { askConcierge } from "@/lib/ai";
-import { getInvestorRoom } from "@/lib/investor-room.functions";
+import { getInvestorRoom, trackDocumentView } from "@/lib/investor-room.functions";
 
 const investorRoomQuery = {
   queryKey: ["investor-room"] as const,
@@ -50,7 +52,6 @@ function MetricCard({ label, value, delta }: { label: string; value: string; del
 
 function InvestorRoomPage() {
   const { data } = useSuspenseQuery(investorRoomQuery);
-  const router = useRouter();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -69,8 +70,7 @@ function InvestorRoomPage() {
         <div>
           <p className="eyebrow">Signed in as {data.profile?.display_name ?? "Investor"}</p>
           <small>
-            {data.profile?.firm ?? "—"} ·{" "}
-            <span className={`role-pill ${data.role}`}>{data.role}</span>
+            {data.profile?.firm ?? "—"} · <span className={`role-pill ${data.role}`}>{data.role}</span>
           </small>
         </div>
         <div className="topbar-actions">
@@ -112,6 +112,17 @@ function InvestorRoomPage() {
         </div>
       </section>
 
+      {!isAdmin && (
+        <section className="panel" style={{ marginBottom: 16 }}>
+          <p className="eyebrow">Investor access</p>
+          <h2>You are signed in as an investor</h2>
+          <p>
+            Investor accounts only see Public/NDA documents, the roadmap, and the AI diligence concierge. Admin tools,
+            CRM, metrics, and restricted documents appear only after your user is assigned the admin role in Supabase.
+          </p>
+        </section>
+      )}
+
       {isAdmin && data.metrics.length > 0 && (
         <section className="metrics">
           {data.metrics.map((metric) => (
@@ -130,16 +141,29 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics and AI diligence
-        concierge.
+        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics and AI diligence concierge.
       </footer>
     </main>
   );
 }
 
 type RoomData = Awaited<ReturnType<typeof getInvestorRoom>>;
+type RoomDocument = RoomData["documents"][number];
 
 function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boolean }) {
+  const [selected, setSelected] = useState<RoomDocument | null>(docs[0] ?? null);
+  const queryClient = useQueryClient();
+
+  async function openDoc(doc: RoomDocument) {
+    setSelected(doc);
+    try {
+      await trackDocumentView({ data: { id: doc.id } });
+      await queryClient.invalidateQueries({ queryKey: ["investor-room"] });
+    } catch {
+      // Keep the document usable even if analytics tracking fails.
+    }
+  }
+
   return (
     <section className="panel span-2">
       <div className="panel-heading">
@@ -158,7 +182,7 @@ function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boo
               <th>Access</th>
               <th>Status</th>
               {isAdmin && <th>Views</th>}
-              <th>Risk</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -176,7 +200,9 @@ function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boo
                 <td>{doc.status}</td>
                 {isAdmin && <td>{doc.views}</td>}
                 <td>
-                  <span className={`risk ${doc.risk}`}>{doc.risk}</span>
+                  <button className="ghost-btn" onClick={() => openDoc(doc)}>
+                    <ExternalLink size={15} /> View
+                  </button>
                 </td>
               </tr>
             ))}
@@ -190,6 +216,46 @@ function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boo
           </tbody>
         </table>
       </div>
+
+      {selected && (
+        <article className="answer" style={{ marginTop: 16 }}>
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">Selected document</p>
+              <h2>{selected.title}</h2>
+            </div>
+            {selected.downloadUrl && (
+              <a className="ghost-btn" href={selected.downloadUrl} target="_blank" rel="noreferrer">
+                <Download size={15} /> Download
+              </a>
+            )}
+          </div>
+          <p>{selected.summary}</p>
+          {selected.content.length > 0 && (
+            <div className="stack">
+              {selected.content.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+          )}
+          {selected.checklist.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              <strong>Diligence checklist</strong>
+              <div className="roadmap" style={{ marginTop: 8 }}>
+                {selected.checklist.map((item) => (
+                  <article key={item}>
+                    <CheckCircle2 size={18} />
+                    <div>
+                      <strong>{item}</strong>
+                      <small>Ready for investor review</small>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+        </article>
+      )}
     </section>
   );
 }
@@ -247,9 +313,7 @@ function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
 }
 
 function Concierge() {
-  const [question, setQuestion] = useState(
-    "Explain Discharge Bridge in investor diligence language.",
-  );
+  const [question, setQuestion] = useState("Explain Discharge Bridge in investor diligence language.");
   const [answer, setAnswer] = useState(
     "Ask a diligence question. Answers are generated server-side and fall back to a grounded summary when no AI key is configured.",
   );
@@ -336,5 +400,4 @@ function ActivityFeed({ activity }: { activity: RoomData["activity"] }) {
   );
 }
 
-// Avoid unused import warnings if memoization comes back.
 void useMemo;

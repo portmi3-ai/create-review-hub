@@ -4,7 +4,6 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import {
   activity,
   companyProfile,
-  documents,
   investors,
   metrics,
   roadmap,

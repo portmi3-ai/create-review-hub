@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      documents: {
+        Row: {
+          access: Database["public"]["Enums"]["doc_access"]
+          created_at: string
+          id: string
+          owner: string | null
+          slug: string | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+          version: string | null
+          views: number
+        }
+        Insert: {
+          access?: Database["public"]["Enums"]["doc_access"]
+          created_at?: string
+          id?: string
+          owner?: string | null
+          slug?: string | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string
+          version?: string | null
+          views?: number
+        }
+        Update: {
+          access?: Database["public"]["Enums"]["doc_access"]
+          created_at?: string
+          id?: string
+          owner?: string | null
+          slug?: string | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+          version?: string | null
+          views?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -74,6 +116,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "investor"
+      doc_access: "NDA" | "Restricted" | "Public"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -202,6 +245,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "investor"],
+      doc_access: ["NDA", "Restricted", "Public"],
     },
   },
 } as const

@@ -65,7 +65,11 @@ function AdminPage() {
           </div>
           <ShieldCheck size={20} />
         </div>
-        {error && <div className="answer" style={{ borderColor: "#ef4444" }}>{error}</div>}
+        {error && (
+          <div className="answer" style={{ borderColor: "#ef4444" }}>
+            {error}
+          </div>
+        )}
         <div className="table-wrap">
           <table>
             <thead>

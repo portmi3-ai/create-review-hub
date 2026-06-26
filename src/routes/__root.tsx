@@ -77,14 +77,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "InvestorOS — Discharge Bridge Investor Room" },
+      {
+        name: "description",
+        content:
+          "Secure investor room for Discharge Bridge by Mport Media Technologies — diligence documents, engagement analytics, and AI concierge.",
+      },
+      { name: "author", content: "Mport Media Technologies" },
+      { property: "og:title", content: "InvestorOS — Discharge Bridge Investor Room" },
+      {
+        property: "og:description",
+        content:
+          "Governance-aware healthcare discharge orchestration investor room with secure data room, CRM, and AI concierge.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@MportMedia" },
     ],
     links: [
       {

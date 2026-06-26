@@ -28,7 +28,10 @@ export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "InvestorOS — Discharge Bridge Investor Room" },
-      { name: "description", content: "Authenticated investor room: VDR, CRM, analytics, and AI diligence concierge." },
+      {
+        name: "description",
+        content: "Authenticated investor room: VDR, CRM, analytics, and AI diligence concierge.",
+      },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(investorRoomQuery),
@@ -127,7 +130,8 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics and AI diligence concierge.
+        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics and AI diligence
+        concierge.
       </footer>
     </main>
   );
@@ -243,7 +247,9 @@ function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
 }
 
 function Concierge() {
-  const [question, setQuestion] = useState("Explain Discharge Bridge in investor diligence language.");
+  const [question, setQuestion] = useState(
+    "Explain Discharge Bridge in investor diligence language.",
+  );
   const [answer, setAnswer] = useState(
     "Ask a diligence question. Answers are generated server-side and fall back to a grounded summary when no AI key is configured.",
   );

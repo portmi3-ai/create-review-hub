@@ -1,13 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import {
-  activity,
-  companyProfile,
-  investors,
-  metrics,
-  roadmap,
-} from "@/data/seed";
+import { activity, companyProfile, investors, metrics, roadmap } from "@/data/seed";
 import { calculateInvestorPriority, classifyDocumentRisk } from "@/lib/scoring";
 
 const conciergeContext = `
@@ -110,13 +104,10 @@ export const deleteDocument = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-
 export const askConciergeFn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
-    z
-      .object({ question: z.string().trim().min(1).max(2000) })
-      .parse(input),
+    z.object({ question: z.string().trim().min(1).max(2000) }).parse(input),
   )
   .handler(async ({ data }) => {
     const apiKey = process.env.GEMINI_API_KEY;
@@ -124,8 +115,9 @@ export const askConciergeFn = createServerFn({ method: "POST" })
       return { answer: fallbackAnswer(data.question), mode: "fallback" as const };
     }
 
+    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -151,7 +143,9 @@ export const askConciergeFn = createServerFn({ method: "POST" })
       };
     }
 
-    const json: any = await response.json();
+    const json = (await response.json()) as {
+      candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
+    };
     const answer: string =
       json?.candidates?.[0]?.content?.parts?.[0]?.text || fallbackAnswer(data.question);
     return { answer, mode: "gemini" as const };

@@ -1,8 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 
-async function assertAdmin(supabase: any, userId: string) {
+async function assertAdmin(supabase: SupabaseClient<Database>, userId: string) {
   const { data, error } = await supabase.rpc("has_role", {
     _user_id: userId,
     _role: "admin",
@@ -75,10 +77,7 @@ export const setUserRole = createServerFn({ method: "POST" })
     if (data.enabled) {
       const { error } = await supabaseAdmin
         .from("user_roles")
-        .upsert(
-          { user_id: data.targetUserId, role: data.role },
-          { onConflict: "user_id,role" },
-        );
+        .upsert({ user_id: data.targetUserId, role: data.role }, { onConflict: "user_id,role" });
       if (error) throw new Error(error.message);
     } else {
       const { error } = await supabaseAdmin

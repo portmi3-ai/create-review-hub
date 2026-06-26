@@ -72,9 +72,14 @@ function InvestorRoomPage() {
         </div>
         <div className="topbar-actions">
           {isAdmin && (
-            <Link to="/admin" className="ghost-btn">
-              <Shield size={16} /> Admin
-            </Link>
+            <>
+              <Link to="/documents" className="ghost-btn">
+                <FileText size={16} /> Documents
+              </Link>
+              <Link to="/admin" className="ghost-btn">
+                <Shield size={16} /> Admin
+              </Link>
+            </>
           )}
           <button className="ghost-btn" onClick={handleSignOut}>
             <LogOut size={16} /> Sign out

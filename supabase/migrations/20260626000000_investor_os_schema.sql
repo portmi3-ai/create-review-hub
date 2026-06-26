@@ -3,8 +3,19 @@
 
 create extension if not exists pgcrypto;
 
-create type public.app_role as enum ('admin', 'investor');
-create type public.doc_access as enum ('NDA', 'Restricted', 'Public');
+do $$
+begin
+  create type public.app_role as enum ('admin', 'investor');
+exception
+  when duplicate_object then null;
+end $$;
+
+do $$
+begin
+  create type public.doc_access as enum ('NDA', 'Restricted', 'Public');
+exception
+  when duplicate_object then null;
+end $$;
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -71,6 +82,9 @@ as $$
   );
 $$;
 
+revoke all on function public.has_role(uuid, public.app_role) from public;
+grant execute on function public.has_role(uuid, public.app_role) to authenticated;
+
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -124,12 +138,26 @@ on public.user_roles for select
 to authenticated
 using (user_id = auth.uid() or public.has_role(auth.uid(), 'admin'));
 
-drop policy if exists "roles_admin_all" on public.user_roles;
-create policy "roles_admin_all"
-on public.user_roles for all
+drop policy if exists "roles_admin_insert" on public.user_roles;
+create policy "roles_admin_insert"
+on public.user_roles for insert
+to authenticated
+with check (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "roles_admin_update" on public.user_roles;
+create policy "roles_admin_update"
+on public.user_roles for update
 to authenticated
 using (public.has_role(auth.uid(), 'admin'))
 with check (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "roles_admin_delete" on public.user_roles;
+create policy "roles_admin_delete"
+on public.user_roles for delete
+to authenticated
+using (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "roles_admin_all" on public.user_roles;
 
 drop policy if exists "documents_select_by_access" on public.documents;
 create policy "documents_select_by_access"
@@ -140,12 +168,26 @@ using (
   or access in ('Public', 'NDA')
 );
 
-drop policy if exists "documents_admin_all" on public.documents;
-create policy "documents_admin_all"
-on public.documents for all
+drop policy if exists "documents_admin_insert" on public.documents;
+create policy "documents_admin_insert"
+on public.documents for insert
+to authenticated
+with check (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "documents_admin_update" on public.documents;
+create policy "documents_admin_update"
+on public.documents for update
 to authenticated
 using (public.has_role(auth.uid(), 'admin'))
 with check (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "documents_admin_delete" on public.documents;
+create policy "documents_admin_delete"
+on public.documents for delete
+to authenticated
+using (public.has_role(auth.uid(), 'admin'));
+
+drop policy if exists "documents_admin_all" on public.documents;
 
 insert into public.documents (title, type, status, access, views, owner, version, slug)
 values

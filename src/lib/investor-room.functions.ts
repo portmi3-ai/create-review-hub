@@ -40,11 +40,14 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       .eq("id", userId)
       .maybeSingle();
 
-    // Investors: NDA-access documents only, no analytics, no CRM, no audit.
-    const visibleDocs = (isAdmin
-      ? documents
-      : documents.filter((d) => d.access === "NDA")
-    ).map((d) => ({
+    // RLS enforces: investors get NDA-only rows, admins get all.
+    const { data: docRows, error: docErr } = await supabase
+      .from("documents")
+      .select("id, title, type, status, access, views, owner, version")
+      .order("created_at", { ascending: true });
+    if (docErr) throw new Error(docErr.message);
+
+    const visibleDocs = (docRows ?? []).map((d) => ({
       ...d,
       risk: classifyDocumentRisk(d.status, d.access),
     }));
@@ -67,6 +70,46 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       activity: isAdmin ? activity : [],
     };
   });
+
+const docInput = z.object({
+  title: z.string().trim().min(1).max(200),
+  type: z.string().trim().min(1).max(80),
+  status: z.string().trim().min(1).max(80),
+  access: z.enum(["NDA", "Restricted", "Public"]),
+  owner: z.string().trim().max(80).optional().nullable(),
+  version: z.string().trim().max(40).optional().nullable(),
+});
+
+export const createDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => docInput.parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("documents").insert(data);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const updateDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({ id: z.string().uuid() }).merge(docInput.partial()).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { id, ...patch } = data;
+    const { error } = await context.supabase.from("documents").update(patch).eq("id", id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const deleteDocument = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("documents").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 
 export const askConciergeFn = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

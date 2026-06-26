@@ -8,7 +8,11 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — InvestorOS" },
-      { name: "description", content: "Sign in or create an investor account to access the Discharge Bridge investor room." },
+      {
+        name: "description",
+        content:
+          "Sign in or create an investor account to access the Discharge Bridge investor room.",
+      },
     ],
   }),
   component: AuthPage,
@@ -118,14 +122,20 @@ function AuthPage() {
           Continue with Google
         </button>
 
-        <div className="divider"><span>or</span></div>
+        <div className="divider">
+          <span>or</span>
+        </div>
 
         <form onSubmit={submit} className="auth-form">
           {mode === "signup" && (
             <>
               <label>
                 <small>Display name</small>
-                <input value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+                <input
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
+                  required
+                />
               </label>
               <label>
                 <small>Firm (optional)</small>
@@ -135,7 +145,13 @@ function AuthPage() {
           )}
           <label>
             <small>Email</small>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
           </label>
           <label>
             <small>Password</small>

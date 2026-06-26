@@ -117,7 +117,11 @@ function AdminDocsPage() {
         </div>
       </section>
 
-      {error && <div className="answer" style={{ borderColor: "#ef4444" }}>{error}</div>}
+      {error && (
+        <div className="answer" style={{ borderColor: "#ef4444" }}>
+          {error}
+        </div>
+      )}
 
       <section className="panel">
         <div className="panel-heading">
@@ -195,7 +199,9 @@ function AdminDocsPage() {
                   <td>
                     <strong>{d.title}</strong>
                     <br />
-                    <small>{d.owner ?? "—"} · {d.version ?? "—"}</small>
+                    <small>
+                      {d.owner ?? "—"} · {d.version ?? "—"}
+                    </small>
                   </td>
                   <td>{d.type}</td>
                   <td>
@@ -225,7 +231,11 @@ function AdminDocsPage() {
                 </tr>
               ))}
               {roomQuery.isLoading && (
-                <tr><td colSpan={6}><small>Loading…</small></td></tr>
+                <tr>
+                  <td colSpan={6}>
+                    <small>Loading…</small>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

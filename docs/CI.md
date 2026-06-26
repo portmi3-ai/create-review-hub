@@ -1,37 +1,18 @@
 # InvestorOS CI checks
 
-The GitHub connector blocked creation of a `.github/workflows` file in this session, so this document captures the CI configuration that should be added in GitHub or from a local checkout.
+GitHub Actions workflow: `.github/workflows/investor-os-readiness.yml`
 
-Create `.github/workflows/investor-os-readiness.yml` with the following workflow:
+The workflow runs on pull requests and pushes to `main` or `codex/**` branches. It uses Node 22 and runs:
 
-```yaml
-name: InvestorOS readiness
+- `npm install`
+- `npm run lint`
+- `npm test`
+- `npm run build`
 
-on:
-  pull_request:
-  push:
-    branches:
-      - main
-      - 'codex/**'
+Locally, run the full readiness gate with:
 
-jobs:
-  readiness:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run readiness checks
-        run: node scripts/readiness-check.mjs
+```bash
+npm run check
 ```
 
 The workflow intentionally avoids real Supabase or Gemini secrets. Netlify should run the full production build with actual environment variables configured in the Netlify dashboard.

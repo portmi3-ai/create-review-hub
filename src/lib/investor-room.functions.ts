@@ -122,7 +122,8 @@ export const trackDocumentView = createServerFn({ method: "POST" })
       .maybeSingle();
     if (readError) throw new Error(readError.message);
 
-    const { error } = await context.supabase
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
       .from("documents")
       .update({ views: (current?.views ?? 0) + 1 })
       .eq("id", data.id);

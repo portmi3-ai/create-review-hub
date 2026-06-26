@@ -5,6 +5,15 @@ import test from "node:test";
 const read = (path) => readFileSync(path, "utf8");
 const migrationPath = "supabase/migrations/20260626000000_investor_os_schema.sql";
 
+const wiredDocs = [
+  "investor-pitch-deck",
+  "investment-memo",
+  "financial-model",
+  "patent-summary",
+  "security-roadmap",
+  "product-architecture",
+];
+
 test("package scripts support deploy readiness checks", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.scripts.typecheck, "tsc --noEmit");
@@ -104,4 +113,20 @@ test("enum creation in migration is idempotent", () => {
   assert.match(migration, /when duplicate_object then null/);
   assert.match(migration, /security definer/);
   assert.match(migration, /set search_path = public/);
+});
+
+test("virtual data room documents are wired to downloadable content", () => {
+  const catalog = read("src/data/investor-documents.ts");
+  for (const slug of wiredDocs) {
+    assert.match(catalog, new RegExp(slug), `missing catalog entry for ${slug}`);
+    assert.equal(existsSync(`public/docs/${slug}.md`), true, `missing public/docs/${slug}.md`);
+  }
+});
+
+test("dashboard exposes document view and download actions", () => {
+  const dashboard = read("src/routes/_authenticated/index.tsx");
+  assert.match(dashboard, /trackDocumentView/);
+  assert.match(dashboard, /Download/);
+  assert.match(dashboard, /Selected document/);
+  assert.match(dashboard, /Diligence checklist/);
 });

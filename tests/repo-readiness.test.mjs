@@ -7,44 +7,16 @@ const migrationPath = "supabase/migrations/20260626000000_investor_os_schema.sql
 const workspaceMigrationPath = "supabase/migrations/20260627000000_investor_os_workspace.sql";
 const dcbDocsMigrationPath = "supabase/migrations/20260627010000_dcb_investor_documents.sql";
 
-const wiredDocs = [
-  "investor-pitch-deck",
-  "investment-memo",
-  "financial-model",
-  "patent-summary",
-  "security-roadmap",
-  "product-architecture",
-];
-
-const dcbDocs = [
-  "dcb-investor-summary",
-  "dcb-one-pager",
-  "dcb-platform-overview",
-  "dcb-pitch-outline",
-  "dcb-gtm-system",
-  "dcb-global-blueprint",
-  "dcb-pricing-offers",
-];
-
-const workspaceTokens = [
-  "FounderKpiPanel",
-  "DataRoomFoldersPanel",
-  "DiligenceRequestsPanel",
-  "InvestorPipelinePanel",
-  "InvestorUpdatesPanel",
-  "GithubFeedPanel",
-  "ProductSandboxPanel",
-  "FundraisingTasksPanel",
-];
+const wiredDocs = ["investor-pitch-deck", "investment-memo", "financial-model", "patent-summary", "security-roadmap", "product-architecture"];
+const dcbDocs = ["dcb-investor-summary", "dcb-one-pager", "dcb-platform-overview", "dcb-pitch-outline", "dcb-gtm-system", "dcb-global-blueprint", "dcb-pricing-offers"];
+const workspaceTokens = ["FounderKpiPanel", "DataRoomFoldersPanel", "DiligenceRequestsPanel", "InvestorPipelinePanel", "InvestorUpdatesPanel", "GithubFeedPanel", "ProductSandboxPanel", "FundraisingTasksPanel"];
+const platformFiles = ["src/data/platform-capabilities.ts", "src/data/financial-center.ts", "src/data/media-compliance.ts", "src/data/integration-automation.ts", "src/components/investor-os/FullPlatformPanels.tsx", "docs/full-platform-schema.md"];
 
 test("package scripts support deploy readiness checks", () => {
   const pkg = JSON.parse(read("package.json"));
   assert.equal(pkg.scripts.typecheck, "tsc --noEmit");
   assert.equal(pkg.scripts.test, "node --test tests/*.test.mjs");
-  assert.equal(
-    pkg.scripts.check,
-    "npm run typecheck && npm run lint && npm run test && npm run build",
-  );
+  assert.equal(pkg.scripts.check, "npm run typecheck && npm run lint && npm run test && npm run build");
 });
 
 test("CI workflow runs lint, test, and build on Node 22", () => {
@@ -71,14 +43,7 @@ test("root metadata uses InvestorOS branding", () => {
 
 test("environment template documents required runtime variables", () => {
   const env = read(".env.example");
-  for (const key of [
-    "VITE_SUPABASE_URL",
-    "VITE_SUPABASE_PUBLISHABLE_KEY",
-    "SUPABASE_URL",
-    "SUPABASE_PUBLISHABLE_KEY",
-    "SUPABASE_SERVICE_ROLE_KEY",
-    "GEMINI_API_KEY",
-  ]) {
+  for (const key of ["VITE_SUPABASE_URL", "VITE_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY", "GEMINI_API_KEY"]) {
     assert.match(env, new RegExp(`^${key}=`, "m"), `missing ${key}`);
   }
 });
@@ -94,16 +59,7 @@ test("seed data uses the current $2M Seed target", () => {
 
 test("Supabase migration defines required InvestorOS primitives", () => {
   const migration = read(migrationPath);
-  for (const token of [
-    "create table if not exists public.documents",
-    "create table if not exists public.profiles",
-    "create table if not exists public.user_roles",
-    "create or replace function public.has_role",
-    "create or replace function public.handle_new_user",
-    "alter table public.documents enable row level security",
-    "alter table public.profiles enable row level security",
-    "alter table public.user_roles enable row level security",
-  ]) {
+  for (const token of ["create table if not exists public.documents", "create table if not exists public.profiles", "create table if not exists public.user_roles", "create or replace function public.has_role", "create or replace function public.handle_new_user", "alter table public.documents enable row level security", "alter table public.profiles enable row level security", "alter table public.user_roles enable row level security"]) {
     assert.match(migration, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
 });
@@ -119,10 +75,7 @@ test("RLS policies preserve investor/admin separation", () => {
   assert.match(migration, /roles_admin_insert/);
   assert.match(migration, /roles_admin_update/);
   assert.match(migration, /roles_admin_delete/);
-  assert.match(
-    migration,
-    /grant execute on function public\.has_role\(uuid, public\.app_role\) to authenticated/,
-  );
+  assert.match(migration, /grant execute on function public\.has_role\(uuid, public\.app_role\) to authenticated/);
 });
 
 test("InvestorOS source keeps fallback AI behavior", () => {
@@ -177,24 +130,29 @@ test("InvestorOS workspace modules are rendered on the dashboard", () => {
   const dashboard = read("src/routes/_authenticated/index.tsx");
   const workspace = read("src/components/investor-os/WorkspacePanels.tsx");
   assert.match(dashboard, /PlatformWorkspace/);
-  for (const token of workspaceTokens) {
-    assert.match(workspace, new RegExp(token), `missing ${token}`);
-  }
+  for (const token of workspaceTokens) assert.match(workspace, new RegExp(token), `missing ${token}`);
 });
 
 test("workspace persistence migration defines protected InvestorOS tables", () => {
   const migration = read(workspaceMigrationPath);
-  for (const token of [
-    "public.investor_contacts",
-    "public.diligence_requests",
-    "public.investor_updates",
-    "public.investor_events",
-    "public.product_sandbox_items",
-    "enable row level security",
-    "investor_contacts_admin_all",
-    "investor_updates_select_by_access",
-    "product_sandbox_items_select_authenticated",
-  ]) {
+  for (const token of ["public.investor_contacts", "public.diligence_requests", "public.investor_updates", "public.investor_events", "public.product_sandbox_items", "enable row level security", "investor_contacts_admin_all", "investor_updates_select_by_access", "product_sandbox_items_select_authenticated"]) {
     assert.match(migration, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+});
+
+test("full platform modules are present and rendered", () => {
+  for (const file of platformFiles) assert.equal(existsSync(file), true, `missing ${file}`);
+  const dashboard = read("src/routes/_authenticated/index.tsx");
+  const panels = read("src/components/investor-os/FullPlatformPanels.tsx");
+  assert.match(dashboard, /FullPlatformPanels/);
+  for (const token of ["Financial center", "Compliance center", "Media center", "Automation", "Integrations", "InvestorOS capability map"]) {
+    assert.match(panels, new RegExp(token));
+  }
+});
+
+test("full platform schema roadmap covers production systems", () => {
+  const schema = read("docs/full-platform-schema.md");
+  for (const token of ["document_files", "nda_acceptances", "investor_tasks", "diligence_requests", "document_chunks", "fundraising_rounds", "media_assets", "integration_connections", "automation_rules"]) {
+    assert.match(schema, new RegExp(token));
   }
 });

@@ -1,4 +1,13 @@
-import { Boxes, BriefcaseBusiness, CheckCircle2, FileCheck2, Landmark, PlugZap, Radio, ShieldCheck } from "lucide-react";
+import {
+  Boxes,
+  BriefcaseBusiness,
+  CheckCircle2,
+  FileCheck2,
+  Landmark,
+  PlugZap,
+  Radio,
+  ShieldCheck,
+} from "lucide-react";
 import { platformCapabilities } from "@/data/platform-capabilities";
 import { commitmentPipeline, financialCenter } from "@/data/financial-center";
 import { complianceCenter, mediaAssets } from "@/data/media-compliance";
@@ -28,7 +37,10 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
               <div>
                 <strong>{capability.name}</strong>
                 <small>
-                  {capability.category} · <span className={`role-pill ${statusClass(capability.status)}`}>{capability.status}</span>
+                  {capability.category} ·{" "}
+                  <span className={`role-pill ${statusClass(capability.status)}`}>
+                    {capability.status}
+                  </span>
                 </small>
                 <small>{capability.benefit}</small>
                 {isAdmin && <small>Next: {capability.nextStep}</small>}
@@ -47,14 +59,25 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
           <Landmark size={20} />
         </div>
         <div className="stack">
-          <article className="metric-card"><span>Round</span><strong>{financialCenter.activeRound}</strong><small>{financialCenter.runwayTarget}</small></article>
-          <article className="metric-card"><span>Target</span><strong>{financialCenter.target}</strong><small>Committed: {financialCenter.committed}</small></article>
-          {isAdmin && commitmentPipeline.map((item) => (
-            <article className="activity" key={item.investor}>
-              <strong>{item.investor}</strong>
-              <small>{item.amount} · {item.stage} · {item.probability}</small>
-            </article>
-          ))}
+          <article className="metric-card">
+            <span>Round</span>
+            <strong>{financialCenter.activeRound}</strong>
+            <small>{financialCenter.runwayTarget}</small>
+          </article>
+          <article className="metric-card">
+            <span>Target</span>
+            <strong>{financialCenter.target}</strong>
+            <small>Committed: {financialCenter.committed}</small>
+          </article>
+          {isAdmin &&
+            commitmentPipeline.map((item) => (
+              <article className="activity" key={item.investor}>
+                <strong>{item.investor}</strong>
+                <small>
+                  {item.amount} · {item.stage} · {item.probability}
+                </small>
+              </article>
+            ))}
         </div>
       </section>
 
@@ -70,7 +93,12 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
           {complianceCenter.map((item) => (
             <article key={item.item}>
               <FileCheck2 size={18} />
-              <div><strong>{item.item}</strong><small>{item.status} · {item.evidence}</small></div>
+              <div>
+                <strong>{item.item}</strong>
+                <small>
+                  {item.status} · {item.evidence}
+                </small>
+              </div>
             </article>
           ))}
         </div>
@@ -87,7 +115,12 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
         <div className="stack">
           {mediaAssets.map((asset) => (
             <article className="investor" key={asset.name}>
-              <div><strong>{asset.name}</strong><small>{asset.type} · {asset.usage}</small></div>
+              <div>
+                <strong>{asset.name}</strong>
+                <small>
+                  {asset.type} · {asset.usage}
+                </small>
+              </div>
               <span>{asset.status}</span>
             </article>
           ))}
@@ -106,7 +139,12 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
           {automationQueue.map((item) => (
             <article key={item.name}>
               <Radio size={18} />
-              <div><strong>{item.name}</strong><small>{item.status} · {item.trigger}</small></div>
+              <div>
+                <strong>{item.name}</strong>
+                <small>
+                  {item.status} · {item.trigger}
+                </small>
+              </div>
             </article>
           ))}
         </div>
@@ -123,7 +161,10 @@ export function FullPlatformPanels({ isAdmin }: { isAdmin: boolean }) {
         <div className="stack">
           {integrationBacklog.map((item) => (
             <article className="investor" key={item.provider}>
-              <div><strong>{item.provider}</strong><small>{item.purpose}</small></div>
+              <div>
+                <strong>{item.provider}</strong>
+                <small>{item.purpose}</small>
+              </div>
               <span>{item.status}</span>
             </article>
           ))}

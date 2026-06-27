@@ -9,6 +9,16 @@ export const financialCenter = {
 
 export const commitmentPipeline = [
   { investor: "Healthcare AI Angel", amount: "$100k-$250k", stage: "Intro", probability: "Medium" },
-  { investor: "Digital Health Fund", amount: "$250k-$500k", stage: "Diligence", probability: "Medium" },
-  { investor: "Strategic Hospital Partner", amount: "Pilot / strategic", stage: "Pilot review", probability: "High" },
+  {
+    investor: "Digital Health Fund",
+    amount: "$250k-$500k",
+    stage: "Diligence",
+    probability: "Medium",
+  },
+  {
+    investor: "Strategic Hospital Partner",
+    amount: "Pilot / strategic",
+    stage: "Pilot review",
+    probability: "High",
+  },
 ];

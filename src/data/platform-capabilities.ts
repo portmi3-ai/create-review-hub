@@ -14,7 +14,8 @@ export const platformCapabilities: PlatformCapability[] = [
     name: "Private file storage and metadata",
     status: "Scaffolded",
     benefit: "Moves InvestorOS from markdown placeholders toward real investor files.",
-    nextStep: "Apply upload schema, create the private storage bucket, and enable signed download URLs.",
+    nextStep:
+      "Apply upload schema, create the private storage bucket, and enable signed download URLs.",
   },
   {
     id: "signed-downloads",
@@ -53,7 +54,8 @@ export const platformCapabilities: PlatformCapability[] = [
     category: "Investor CRM",
     name: "Persistent CRM records",
     status: "Scaffolded",
-    benefit: "Replaces static pipeline data with investors, firms, stages, notes, and next actions.",
+    benefit:
+      "Replaces static pipeline data with investors, firms, stages, notes, and next actions.",
     nextStep: "Wire investor contact tables into CRM CRUD screens.",
   },
   {
@@ -69,7 +71,8 @@ export const platformCapabilities: PlatformCapability[] = [
     category: "AI Diligence",
     name: "Document-grounded RAG concierge",
     status: "Next",
-    benefit: "Answers investor questions from uploaded files with citations and role-aware filtering.",
+    benefit:
+      "Answers investor questions from uploaded files with citations and role-aware filtering.",
     nextStep: "Add document chunks, embeddings, ingestion jobs, and cited responses.",
   },
   {
@@ -85,7 +88,8 @@ export const platformCapabilities: PlatformCapability[] = [
     category: "Media Center",
     name: "Brand, press, and demo assets",
     status: "Scaffolded",
-    benefit: "Makes logos, screenshots, demo videos, and press materials available in the investor room.",
+    benefit:
+      "Makes logos, screenshots, demo videos, and press materials available in the investor room.",
     nextStep: "Create media asset records and upload workflow.",
   },
   {
@@ -101,7 +105,8 @@ export const platformCapabilities: PlatformCapability[] = [
     category: "Product Sandbox",
     name: "Live Discharge Bridge demo tenant",
     status: "Provider required",
-    benefit: "Lets investors inspect the product workflow using synthetic referrals and safe demo data.",
+    benefit:
+      "Lets investors inspect the product workflow using synthetic referrals and safe demo data.",
     nextStep: "Embed or link a protected DCB demo tenant.",
   },
 ];

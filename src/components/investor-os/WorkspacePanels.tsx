@@ -1,10 +1,33 @@
 import type { ReactNode } from "react";
-import { Activity, Boxes, CalendarClock, CheckCircle2, ClipboardList, FolderKanban, GitPullRequest, PlaySquare, TrendingUp, Users } from "lucide-react";
+import {
+  Activity,
+  Boxes,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardList,
+  FolderKanban,
+  GitPullRequest,
+  PlaySquare,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { getInvestorRoom } from "@/lib/investor-room.functions";
 
 type RoomData = Awaited<ReturnType<typeof getInvestorRoom>>;
 
-function Panel({ eyebrow, title, icon, children, span = false }: { eyebrow: string; title: string; icon: ReactNode; children: ReactNode; span?: boolean }) {
+function Panel({
+  eyebrow,
+  title,
+  icon,
+  children,
+  span = false,
+}: {
+  eyebrow: string;
+  title: string;
+  icon: ReactNode;
+  children: ReactNode;
+  span?: boolean;
+}) {
   return (
     <section className={`panel ${span ? "span-2" : ""}`}>
       <div className="panel-heading">
@@ -21,7 +44,12 @@ function Panel({ eyebrow, title, icon, children, span = false }: { eyebrow: stri
 
 export function FounderKpiPanel({ items }: { items: RoomData["founderKpis"] }) {
   return (
-    <Panel eyebrow="Founder dashboard" title="Company operating signals" icon={<TrendingUp size={20} />} span>
+    <Panel
+      eyebrow="Founder dashboard"
+      title="Company operating signals"
+      icon={<TrendingUp size={20} />}
+      span
+    >
       <div className="metrics" style={{ marginTop: 0 }}>
         {items.map((item) => (
           <article className="metric-card" key={item.label}>
@@ -62,7 +90,9 @@ export function DiligenceRequestsPanel({ requests }: { requests: RoomData["dilig
             <CheckCircle2 size={18} />
             <div>
               <strong>{request.title}</strong>
-              <small>{request.priority} · {request.owner} · {request.due}</small>
+              <small>
+                {request.priority} · {request.owner} · {request.due}
+              </small>
             </div>
           </article>
         ))}
@@ -80,7 +110,9 @@ export function InvestorPipelinePanel({ investors }: { investors: RoomData["inve
           <article className="investor" key={investor.name}>
             <div>
               <strong>{investor.name}</strong>
-              <small>{investor.firm} · {investor.stage} · {investor.nextAction}</small>
+              <small>
+                {investor.firm} · {investor.stage} · {investor.nextAction}
+              </small>
             </div>
             <span>{investor.score}</span>
           </article>
@@ -115,7 +147,9 @@ export function GithubFeedPanel({ feed }: { feed: RoomData["githubFeed"] }) {
             <GitPullRequest size={18} />
             <div>
               <strong>{item.event}</strong>
-              <small>{item.repo} · {item.status} · {item.ref}</small>
+              <small>
+                {item.repo} · {item.status} · {item.ref}
+              </small>
             </div>
           </article>
         ))}
@@ -133,7 +167,9 @@ export function ProductSandboxPanel({ items }: { items: RoomData["productSandbox
             <PlaySquare size={18} />
             <div>
               <strong>{item.name}</strong>
-              <small>{item.status} · {item.description}</small>
+              <small>
+                {item.status} · {item.description}
+              </small>
             </div>
           </article>
         ))}
@@ -151,7 +187,9 @@ export function FundraisingTasksPanel({ tasks }: { tasks: RoomData["fundraisingT
             <Activity size={18} />
             <div>
               <strong>{task.task}</strong>
-              <small>{task.owner} · {task.state}</small>
+              <small>
+                {task.owner} · {task.state}
+              </small>
             </div>
           </article>
         ))}

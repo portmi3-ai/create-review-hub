@@ -56,7 +56,9 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       return {
         ...d,
         risk: classifyDocumentRisk(d.status, d.access),
-        summary: asset?.summary ?? "Document metadata is configured, but content has not been attached yet.",
+        summary:
+          asset?.summary ??
+          "Document metadata is configured, but content has not been attached yet.",
         downloadUrl: asset?.downloadUrl ?? null,
         content: asset?.content ?? [],
         checklist: asset?.checklist ?? [],
@@ -81,11 +83,15 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       analytics: isAdmin ? visibleDocs.map((d) => ({ name: d.type, views: d.views })) : [],
       roadmap,
       activity: isAdmin ? activity : [],
-      diligenceRequests: isAdmin ? diligenceRequests : diligenceRequests.filter((r) => r.state !== "Open").slice(0, 1),
+      diligenceRequests: isAdmin
+        ? diligenceRequests
+        : diligenceRequests.filter((r) => r.state !== "Open").slice(0, 1),
       investorUpdates,
       githubFeed: isAdmin ? githubFeed : githubFeed.slice(0, 2),
       productSandbox,
-      fundraisingTasks: isAdmin ? fundraisingTasks : fundraisingTasks.filter((t) => t.state !== "Required"),
+      fundraisingTasks: isAdmin
+        ? fundraisingTasks
+        : fundraisingTasks.filter((t) => t.state !== "Required"),
     };
   });
 

@@ -69,7 +69,8 @@ function InvestorRoomPage() {
         <div>
           <p className="eyebrow">Signed in as {data.profile?.display_name ?? "Investor"}</p>
           <small>
-            {data.profile?.firm ?? "—"} · <span className={`role-pill ${data.role}`}>{data.role}</span>
+            {data.profile?.firm ?? "—"} ·{" "}
+            <span className={`role-pill ${data.role}`}>{data.role}</span>
           </small>
         </div>
         <div className="topbar-actions">
@@ -116,9 +117,10 @@ function InvestorRoomPage() {
           <p className="eyebrow">Investor access</p>
           <h2>You are signed in as an investor</h2>
           <p>
-            Investor accounts see Public/NDA documents, updates, roadmap, product sandbox milestones, engineering feed,
-            and AI diligence. Admin-only CRM, full metrics, restricted documents, and data requests appear after your
-            user is assigned the admin role in Supabase.
+            Investor accounts see Public/NDA documents, updates, roadmap, product sandbox
+            milestones, engineering feed, and AI diligence. Admin-only CRM, full metrics, restricted
+            documents, and data requests appear after your user is assigned the admin role in
+            Supabase.
           </p>
         </section>
       )}
@@ -141,7 +143,8 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics, updates, sandbox and AI diligence concierge.
+        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics, updates, sandbox and AI
+        diligence concierge.
       </footer>
     </main>
   );
@@ -286,7 +289,9 @@ function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
 }
 
 function Concierge() {
-  const [question, setQuestion] = useState("Explain Discharge Bridge in investor diligence language.");
+  const [question, setQuestion] = useState(
+    "Explain Discharge Bridge in investor diligence language.",
+  );
   const [answer, setAnswer] = useState(
     "Ask a diligence question. Answers are generated server-side and fall back to a grounded summary when no AI key is configured.",
   );

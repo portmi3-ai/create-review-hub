@@ -1,5 +1,5 @@
 export const founderKpis = [
-  { label: "Current raise", value: "$1.5M", status: "Seed target" },
+  { label: "Current raise", value: "$2M", status: "Seed target" },
   { label: "Runway target", value: "18 mo", status: "Post-close plan" },
   { label: "Pilot pipeline", value: "8", status: "Hospital / innovation orgs" },
   { label: "Validated checks", value: "13/13", status: "Production parity milestone" },
@@ -8,8 +8,18 @@ export const founderKpis = [
 ];
 
 export const dataRoomFolders = [
-  { name: "Executive", count: 2, status: "Ready", description: "Deck, one-pager, investment memo" },
-  { name: "Product", count: 2, status: "Ready", description: "Architecture and demo narrative" },
+  {
+    name: "Executive",
+    count: 5,
+    status: "Ready",
+    description: "Deck, one-pager, investment memo, investor summary, pitch outline",
+  },
+  {
+    name: "Product",
+    count: 3,
+    status: "Ready",
+    description: "Architecture, platform overview, demo narrative",
+  },
   {
     name: "Security",
     count: 1,
@@ -18,15 +28,21 @@ export const dataRoomFolders = [
   },
   {
     name: "Financial",
-    count: 1,
+    count: 2,
     status: "Needs update",
-    description: "Seed model placeholder awaiting final spreadsheet",
+    description: "Seed model placeholder and pricing/offers source",
   },
   {
     name: "Legal / IP",
     count: 1,
     status: "Ready",
     description: "Patent-pending summary and receipt slot",
+  },
+  {
+    name: "Go-to-market",
+    count: 2,
+    status: "Ready",
+    description: "Hospital/SNF GTM and global infrastructure expansion thesis",
   },
 ];
 
@@ -58,6 +74,13 @@ export const diligenceRequests = [
     priority: "High",
     state: "Open",
     due: "Demo day follow-up",
+  },
+  {
+    title: "Replace markdown source docs with final PDF/DOCX exports",
+    owner: "InvestorOS",
+    priority: "Medium",
+    state: "Open",
+    due: "Before external data room launch",
   },
 ];
 
@@ -94,6 +117,17 @@ export const investorPipeline = [
 
 export const investorUpdates = [
   {
+    title: "DCB source documents integrated",
+    date: "2026-06-27",
+    summary:
+      "InvestorOS now includes Discharge Bridge investor summary, one-pager, platform overview, pitch outline, GTM, global blueprint, and pricing source docs.",
+  },
+  {
+    title: "Raise target updated",
+    date: "2026-06-27",
+    summary: "Seed target updated from $1.5M Seed to $2M Seed across InvestorOS seed/profile data.",
+  },
+  {
     title: "InvestorOS VDR wired",
     date: "2026-06-26",
     summary:
@@ -112,6 +146,12 @@ export const investorUpdates = [
 ];
 
 export const githubFeed = [
+  {
+    repo: "create-review-hub",
+    event: "DCB investor documents integrated",
+    status: "Branch",
+    ref: "codex/dcb-investor-docs",
+  },
   {
     repo: "create-review-hub",
     event: "InvestorOS document room wired",

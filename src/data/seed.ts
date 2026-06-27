@@ -2,7 +2,7 @@ export const companyProfile = {
   legalName: "Mport Media Technologies, Inc.",
   productName: "Discharge Bridge",
   tagline: "Governance-aware discharge orchestration for hospital-to-SNF transitions.",
-  raise: "$1.5M Seed",
+  raise: "$2M Seed",
   runway: "18 months target",
   stage: "Pilot-ready / enterprise validation",
   positioning:
@@ -10,7 +10,7 @@ export const companyProfile = {
 };
 
 export const metrics = [
-  { label: "Current Raise", value: "$1.5M", delta: "Target" },
+  { label: "Current Raise", value: "$2M", delta: "Seed target" },
   { label: "Committed / Soft Circled", value: "$0", delta: "Update after investor calls" },
   { label: "Pilot Pipeline", value: "8", delta: "Hospitals / innovation orgs" },
   { label: "SNF Registry", value: "17k+", delta: "CMS import-ready" },

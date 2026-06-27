@@ -122,6 +122,139 @@ export const investorDocumentAssets: Record<string, InvestorDocumentAsset> = {
       "Prepare product sandbox walkthrough",
     ],
   },
+  "dcb-investor-summary": {
+    slug: "dcb-investor-summary",
+    title: "DCB Investor Summary",
+    summary:
+      "Investor-facing synthesis from the Discharge Bridge repo covering opportunity, product, market, business model, differentiation, traction, compliance, and use-of-funds framing.",
+    downloadUrl: "/docs/dcb-investor-summary.md",
+    content: [
+      "Discharge Bridge is governed interoperability infrastructure for hospital-to-post-acute patient transitions.",
+      "The current commercial scope is U.S. hospital-to-post-acute coordination, with a Michigan-first GTM sequence and national expansion path.",
+      "Modeled pricing includes $30k-$50k pilots and $75k-$175k+ annual production licensing, scaled by bed count, discharge volume, and modules.",
+      "Claims discipline remains explicit: SOC 2 readiness in progress, AI advisory only, deterministic systems own authoritative routing and state.",
+    ],
+    checklist: [
+      "Replace TBD placeholders before external circulation",
+      "Add founder/team/advisor section",
+      "Attach signed LOIs or pilot evidence when available",
+      "Align ask to $2M Seed use-of-funds plan",
+    ],
+  },
+  "dcb-one-pager": {
+    slug: "dcb-one-pager",
+    title: "DCB One-Pager",
+    summary:
+      "Plain-language one-pager for investors and strategic partners explaining the hospital discharge problem, solution flow, architecture, and commercial model.",
+    downloadUrl: "/docs/dcb-one-pager.md",
+    content: [
+      "Discharge Bridge automates hospital-to-post-acute transitions by connecting hospital EMRs, payer workflows, and SNF networks.",
+      "The workflow moves from EMR referral to normalized clinical payload, structured insights, best-fit SNF options, bed verification, and secure portal execution.",
+      "The platform is positioned as healthcare logistics infrastructure rather than a point solution.",
+      "Commercial model: $30k-$50k pilots, $75k-$175k+ annual licensing, with pricing tied to discharge volume, bed count, and activated modules.",
+    ],
+    checklist: [
+      "Use as first-send overview",
+      "Confirm phrasing around minutes/days claims with pilot evidence",
+      "Add logo and final PDF export",
+      "Pair with investor summary in VDR",
+    ],
+  },
+  "dcb-platform-overview": {
+    slug: "dcb-platform-overview",
+    title: "DCB Platform Overview",
+    summary:
+      "Technical and operating overview of the Discharge Bridge platform: Cloud Run services, Firestore multi-tenant data, Vertex AI, HL7/FHIR, portals, and compliance posture.",
+    downloadUrl: "/docs/dcb-platform-overview.md",
+    content: [
+      "The production model connects hospital EMR systems to an interoperability layer, unified orchestrator API, routing/prior-auth/pharmacy/SNF services, Firestore, and role-scoped portals.",
+      "The unified orchestrator coordinates inbound referrals, routing, service orchestration, workflow state, tenant isolation, and audit logging.",
+      "Clinical intelligence uses Vertex AI for summarization, medication risk, SNF capability matching support, discharge readiness, and payer documentation preparation.",
+      "Governance posture includes RBAC, customer data ownership, automated validation, retention controls, TLS, AES-256 at rest, IAM service isolation, and structured audit logging.",
+    ],
+    checklist: [
+      "Use for technical investor diligence",
+      "Add architecture diagram image/PDF",
+      "Confirm current service list before circulation",
+      "Keep AI advisory language consistent",
+    ],
+  },
+  "dcb-pitch-outline": {
+    slug: "dcb-pitch-outline",
+    title: "DCB Fundable Pitch Outline",
+    summary:
+      "YC-style 10-12 slide structure for presenting Discharge Bridge clearly and fundably to investors.",
+    downloadUrl: "/docs/dcb-pitch-outline.md",
+    content: [
+      "The deck should open with what the company does: replacing legacy discharge coordination with real-time routing infrastructure.",
+      "Core product flow: Referral -> Match -> Rank -> Place.",
+      "Positioning rule: avoid pitching as workflow software or an AI tool; frame as deterministic hospital-to-SNF routing infrastructure.",
+      "Ask slide should map $2M Seed capital to milestones and what will be true in 18-24 months.",
+    ],
+    checklist: [
+      "Convert to final pitch deck slides",
+      "Use simple layman language for demo day",
+      "Keep problem and solution up front",
+      "Tie ask to measurable pilot milestones",
+    ],
+  },
+  "dcb-gtm-system": {
+    slug: "dcb-gtm-system",
+    title: "DCB Hospital + SNF GTM System",
+    summary:
+      "Go-to-market operating model for hospital and SNF rollout using content, demos, pilots, and local network effects.",
+    downloadUrl: "/docs/dcb-gtm-system.md",
+    content: [
+      "GTM loop: content feeds pipeline, pipeline feeds demos, demos feed pilots.",
+      "Hospital targets include directors of case management, throughput leaders, discharge operations, and executive sponsors.",
+      "SNF message: Discharge Bridge brings real-time hospital referrals, faster fills, and inbound consistency.",
+      "Network effect: one hospital plus five SNFs creates local routing density that can expand from local to regional to national.",
+    ],
+    checklist: [
+      "Add CRM fields for hospital/SNF prospect tracking",
+      "Connect GTM tasks to investor updates",
+      "Track demo-to-pilot conversion",
+      "Create Michigan-first rollout dashboard",
+    ],
+  },
+  "dcb-global-blueprint": {
+    slug: "dcb-global-blueprint",
+    title: "DCB Global Infrastructure Blueprint",
+    summary:
+      "Long-range infrastructure thesis for expanding Discharge Bridge from a regional discharge platform into a multi-region healthcare transition network.",
+    downloadUrl: "/docs/dcb-global-blueprint.md",
+    content: [
+      "Global scale expands through interoperability, clinical intelligence, healthcare logistics, and global network infrastructure layers.",
+      "The platform can evolve into a routing layer across hospitals, SNFs, behavioral health, military healthcare, corrections, home health, and hospice.",
+      "Long-term architecture includes regional orchestrator clusters, facility network graph intelligence, analytics, forecasting, and healthcare transition network effects.",
+      "The long-term vision positions Discharge Bridge as an operating system for healthcare transitions across hospitals, post-acute providers, payers, and care networks.",
+    ],
+    checklist: [
+      "Label as roadmap / target-state",
+      "Separate current capabilities from future architecture",
+      "Use for strategic investor discussions",
+      "Avoid implying global deployment is current state",
+    ],
+  },
+  "dcb-pricing-offers": {
+    slug: "dcb-pricing-offers",
+    title: "DCB Pricing + Offer Stack",
+    summary:
+      "Pricing and packaging source document covering pilot offer, production licensing, expansion paths, and proof requirements.",
+    downloadUrl: "/docs/dcb-pricing-offers.md",
+    content: [
+      "Entry offer: $30k-$50k per hospital pilot over 60-120 days to prove throughput, placement speed, and operational fit.",
+      "Core production license: $75k-$175k+ annually, scaled by hospital bed count, annual discharge volume, and activated modules.",
+      "Expansion paths include multi-facility rollout, analytics, benchmarking, behavioral health, home health, and payer integrations.",
+      "Proof requirements include baseline metrics, midpoint pilot readout, final outcomes, and expansion recommendation.",
+    ],
+    checklist: [
+      "Keep list pricing and negotiated pricing separate",
+      "Tie pricing to measurable outcomes",
+      "Add pilot scorecard template",
+      "Update financial model assumptions",
+    ],
+  },
 };
 
 export function getInvestorDocumentAsset(slug?: string | null) {

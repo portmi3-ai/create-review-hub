@@ -16,6 +16,7 @@ import {
   Shield,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { FullPlatformPanels } from "@/components/investor-os/FullPlatformPanels";
 import { PlatformWorkspace } from "@/components/investor-os/PlatformWorkspace";
 import { supabase } from "@/integrations/supabase/client";
 import { askConcierge } from "@/lib/ai";
@@ -69,8 +70,7 @@ function InvestorRoomPage() {
         <div>
           <p className="eyebrow">Signed in as {data.profile?.display_name ?? "Investor"}</p>
           <small>
-            {data.profile?.firm ?? "—"} ·{" "}
-            <span className={`role-pill ${data.role}`}>{data.role}</span>
+            {data.profile?.firm ?? "—"} · <span className={`role-pill ${data.role}`}>{data.role}</span>
           </small>
         </div>
         <div className="topbar-actions">
@@ -106,8 +106,8 @@ function InvestorRoomPage() {
           <strong>{data.companyProfile.tagline}</strong>
           <small>
             {isAdmin
-              ? "Admin view · full VDR · CRM · analytics · audit"
-              : "Investor view · NDA-tier documents · roadmap · updates · AI concierge"}
+              ? "Admin view · VDR · CRM · analytics · compliance · integrations"
+              : "Investor view · documents · updates · roadmap · AI concierge"}
           </small>
         </div>
       </section>
@@ -117,10 +117,9 @@ function InvestorRoomPage() {
           <p className="eyebrow">Investor access</p>
           <h2>You are signed in as an investor</h2>
           <p>
-            Investor accounts see Public/NDA documents, updates, roadmap, product sandbox
-            milestones, engineering feed, and AI diligence. Admin-only CRM, full metrics, restricted
-            documents, and data requests appear after your user is assigned the admin role in
-            Supabase.
+            Investor accounts see Public/NDA documents, updates, roadmap, product sandbox milestones,
+            engineering feed, and AI diligence. Admin-only CRM, metrics, compliance, and integration controls
+            appear after your user is assigned the admin role in Supabase.
           </p>
         </section>
       )}
@@ -136,6 +135,7 @@ function InvestorRoomPage() {
       <section className="grid">
         <DataRoom docs={data.documents} isAdmin={isAdmin} />
         <PlatformWorkspace data={data} isAdmin={isAdmin} />
+        <FullPlatformPanels isAdmin={isAdmin} />
         {isAdmin && data.analytics.length > 0 && <AnalyticsPanel analytics={data.analytics} />}
         <Concierge />
         <RoadmapPanel roadmap={data.roadmap} />
@@ -143,8 +143,7 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics, updates, sandbox and AI
-        diligence concierge.
+        <FileText size={16} /> InvestorOS — VDR, CRM, analytics, compliance, financial center, integrations and AI diligence concierge.
       </footer>
     </main>
   );
@@ -194,9 +193,7 @@ function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boo
                 <td>
                   <strong>{doc.title}</strong>
                   <br />
-                  <small>
-                    {doc.owner} · {doc.version}
-                  </small>
+                  <small>{doc.owner} · {doc.version}</small>
                 </td>
                 <td>{doc.type}</td>
                 <td>{doc.access}</td>
@@ -289,9 +286,7 @@ function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
 }
 
 function Concierge() {
-  const [question, setQuestion] = useState(
-    "Explain Discharge Bridge in investor diligence language.",
-  );
+  const [question, setQuestion] = useState("Explain Discharge Bridge in investor diligence language.");
   const [answer, setAnswer] = useState(
     "Ask a diligence question. Answers are generated server-side and fall back to a grounded summary when no AI key is configured.",
   );
@@ -344,9 +339,7 @@ function RoadmapPanel({ roadmap }: { roadmap: RoomData["roadmap"] }) {
             <CheckCircle2 size={18} />
             <div>
               <strong>{row.item}</strong>
-              <small>
-                {row.state} · {row.owner}
-              </small>
+              <small>{row.state} · {row.owner}</small>
             </div>
           </article>
         ))}

@@ -95,6 +95,136 @@ export type Database = {
         };
         Relationships: [];
       };
+      document_files: {
+        Row: {
+          created_at: string;
+          document_id: string;
+          id: string;
+          is_primary: boolean;
+          mime_type: string | null;
+          original_filename: string;
+          size_bytes: number | null;
+          storage_bucket: string;
+          storage_path: string;
+          updated_at: string;
+          uploaded_by: string | null;
+          version: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          document_id: string;
+          id?: string;
+          is_primary?: boolean;
+          mime_type?: string | null;
+          original_filename: string;
+          size_bytes?: number | null;
+          storage_bucket?: string;
+          storage_path: string;
+          updated_at?: string;
+          uploaded_by?: string | null;
+          version?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          document_id?: string;
+          id?: string;
+          is_primary?: boolean;
+          mime_type?: string | null;
+          original_filename?: string;
+          size_bytes?: number | null;
+          storage_bucket?: string;
+          storage_path?: string;
+          updated_at?: string;
+          uploaded_by?: string | null;
+          version?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "document_files_document_id_fkey";
+            columns: ["document_id"];
+            isOneToOne: false;
+            referencedRelation: "documents";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      investor_invites: {
+        Row: {
+          accepted_at: string | null;
+          created_at: string;
+          email: string;
+          expires_at: string;
+          firm: string | null;
+          id: string;
+          invited_by: string | null;
+          role: Database["public"]["Enums"]["app_role"];
+          status: string;
+          token: string;
+          updated_at: string;
+        };
+        Insert: {
+          accepted_at?: string | null;
+          created_at?: string;
+          email: string;
+          expires_at?: string;
+          firm?: string | null;
+          id?: string;
+          invited_by?: string | null;
+          role?: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          token?: string;
+          updated_at?: string;
+        };
+        Update: {
+          accepted_at?: string | null;
+          created_at?: string;
+          email?: string;
+          expires_at?: string;
+          firm?: string | null;
+          id?: string;
+          invited_by?: string | null;
+          role?: Database["public"]["Enums"]["app_role"];
+          status?: string;
+          token?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      document_access_events: {
+        Row: {
+          created_at: string;
+          document_id: string | null;
+          event_type: string;
+          id: string;
+          metadata: Json;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          document_id?: string | null;
+          event_type: string;
+          id?: string;
+          metadata?: Json;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          document_id?: string | null;
+          event_type?: string;
+          id?: string;
+          metadata?: Json;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "document_access_events_document_id_fkey";
+            columns: ["document_id"];
+            isOneToOne: false;
+            referencedRelation: "documents";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;

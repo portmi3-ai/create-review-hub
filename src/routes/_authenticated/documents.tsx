@@ -94,7 +94,9 @@ function AdminDocsPage() {
         },
       });
       setFileForm(emptyFile);
-      setSuccess("File metadata registered. Upload the matching file into the private Supabase bucket path.");
+      setSuccess(
+        "File metadata registered. Upload the matching file into the private Supabase bucket path.",
+      );
       await invalidate();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to register file metadata");
@@ -302,8 +304,8 @@ function AdminDocsPage() {
             </div>
             <button type="submit">Register file metadata</button>
             <small>
-              Upload the actual file to the private Supabase bucket manually for now. This records the VDR file metadata
-              and prepares the signed-url workflow.
+              Upload the actual file to the private Supabase bucket manually for now. This records
+              the VDR file metadata and prepares the signed-url workflow.
             </small>
           </form>
         </section>
@@ -331,7 +333,9 @@ function AdminDocsPage() {
             />
             <select
               value={inviteForm.role}
-              onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value as "investor" | "admin" })}
+              onChange={(e) =>
+                setInviteForm({ ...inviteForm, role: e.target.value as "investor" | "admin" })
+              }
             >
               <option value="investor">Investor</option>
               <option value="admin">Admin</option>

@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import {
   Activity,
@@ -14,9 +14,9 @@ import {
   Lock,
   LogOut,
   Shield,
-  Users,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { PlatformWorkspace } from "@/components/investor-os/PlatformWorkspace";
 import { supabase } from "@/integrations/supabase/client";
 import { askConcierge } from "@/lib/ai";
 import { getInvestorRoom, trackDocumentView } from "@/lib/investor-room.functions";
@@ -54,7 +54,6 @@ function InvestorRoomPage() {
   const { data } = useSuspenseQuery(investorRoomQuery);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
   const isAdmin = data.role === "admin";
 
   async function handleSignOut() {
@@ -70,7 +69,8 @@ function InvestorRoomPage() {
         <div>
           <p className="eyebrow">Signed in as {data.profile?.display_name ?? "Investor"}</p>
           <small>
-            {data.profile?.firm ?? "—"} · <span className={`role-pill ${data.role}`}>{data.role}</span>
+            {data.profile?.firm ?? "—"} ·{" "}
+            <span className={`role-pill ${data.role}`}>{data.role}</span>
           </small>
         </div>
         <div className="topbar-actions">
@@ -107,7 +107,7 @@ function InvestorRoomPage() {
           <small>
             {isAdmin
               ? "Admin view · full VDR · CRM · analytics · audit"
-              : "Investor view · NDA-tier documents · roadmap · AI concierge"}
+              : "Investor view · NDA-tier documents · roadmap · updates · AI concierge"}
           </small>
         </div>
       </section>
@@ -117,8 +117,10 @@ function InvestorRoomPage() {
           <p className="eyebrow">Investor access</p>
           <h2>You are signed in as an investor</h2>
           <p>
-            Investor accounts only see Public/NDA documents, the roadmap, and the AI diligence concierge. Admin tools,
-            CRM, metrics, and restricted documents appear only after your user is assigned the admin role in Supabase.
+            Investor accounts see Public/NDA documents, updates, roadmap, product sandbox
+            milestones, engineering feed, and AI diligence. Admin-only CRM, full metrics, restricted
+            documents, and data requests appear after your user is assigned the admin role in
+            Supabase.
           </p>
         </section>
       )}
@@ -133,7 +135,7 @@ function InvestorRoomPage() {
 
       <section className="grid">
         <DataRoom docs={data.documents} isAdmin={isAdmin} />
-        {isAdmin && <InvestorCRM investors={data.investors} />}
+        <PlatformWorkspace data={data} isAdmin={isAdmin} />
         {isAdmin && data.analytics.length > 0 && <AnalyticsPanel analytics={data.analytics} />}
         <Concierge />
         <RoadmapPanel roadmap={data.roadmap} />
@@ -141,7 +143,8 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics and AI diligence concierge.
+        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics, updates, sandbox and AI
+        diligence concierge.
       </footer>
     </main>
   );
@@ -260,33 +263,6 @@ function DataRoom({ docs, isAdmin }: { docs: RoomData["documents"]; isAdmin: boo
   );
 }
 
-function InvestorCRM({ investors }: { investors: RoomData["investors"] }) {
-  return (
-    <section className="panel">
-      <div className="panel-heading">
-        <div>
-          <p className="eyebrow">Investor CRM</p>
-          <h2>Pipeline priority</h2>
-        </div>
-        <Users size={20} />
-      </div>
-      <div className="stack">
-        {investors.map((investor) => (
-          <article className="investor" key={investor.name}>
-            <div>
-              <strong>{investor.name}</strong>
-              <small>
-                {investor.firm} · {investor.interest}
-              </small>
-            </div>
-            <span>{investor.priority}</span>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
   return (
     <section className="panel">
@@ -313,7 +289,9 @@ function AnalyticsPanel({ analytics }: { analytics: RoomData["analytics"] }) {
 }
 
 function Concierge() {
-  const [question, setQuestion] = useState("Explain Discharge Bridge in investor diligence language.");
+  const [question, setQuestion] = useState(
+    "Explain Discharge Bridge in investor diligence language.",
+  );
   const [answer, setAnswer] = useState(
     "Ask a diligence question. Answers are generated server-side and fall back to a grounded summary when no AI key is configured.",
   );
@@ -399,5 +377,3 @@ function ActivityFeed({ activity }: { activity: RoomData["activity"] }) {
     </section>
   );
 }
-
-void useMemo;

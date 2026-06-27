@@ -3,6 +3,16 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { activity, companyProfile, investors, metrics, roadmap } from "@/data/seed";
 import { getInvestorDocumentAsset } from "@/data/investor-documents";
+import {
+  dataRoomFolders,
+  diligenceRequests,
+  founderKpis,
+  fundraisingTasks,
+  githubFeed,
+  investorPipeline,
+  investorUpdates,
+  productSandbox,
+} from "@/data/platform";
 import { calculateInvestorPriority, classifyDocumentRisk } from "@/lib/scoring";
 
 const conciergeContext = `
@@ -10,7 +20,7 @@ Company: Discharge Bridge by Mport Media Technologies, Inc.
 Positioning: Governance-aware healthcare discharge orchestration infrastructure for hospital-to-SNF transitions.
 Core thesis: reduce avoidable inpatient days, manual discharge coordination, SNF placement friction, prior-auth readiness gaps, and medication handoff risk.
 Platform: deterministic workflows, advisory AI, FHIR/HL7 alignment, Cloud Run services, Firebase/Firestore, Vertex AI-ready, AgentEcos orchestration, HIPAA-aligned posture, SOC 2 readiness roadmap.
-Investor room modules: secure data room, investor CRM, engagement analytics, diligence checklist, AI concierge, product sandbox, GitHub/deployment feed, monthly investor updates.
+Investor room modules: secure data room, investor CRM, engagement analytics, diligence checklist, AI concierge, product sandbox, GitHub/deployment feed, monthly investor updates, fundraising tasks, and founder KPI workspace.
 Current status: pilot-ready enterprise validation, CMS facility registry imports, production smoke validation milestones, patent-pending automated entity placement/resource matching method.
 `;
 
@@ -46,7 +56,9 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
       return {
         ...d,
         risk: classifyDocumentRisk(d.status, d.access),
-        summary: asset?.summary ?? "Document metadata is configured, but content has not been attached yet.",
+        summary:
+          asset?.summary ??
+          "Document metadata is configured, but content has not been attached yet.",
         downloadUrl: asset?.downloadUrl ?? null,
         content: asset?.content ?? [],
         checklist: asset?.checklist ?? [],
@@ -54,21 +66,32 @@ export const getInvestorRoom = createServerFn({ method: "GET" })
     });
 
     const rankedInvestors = isAdmin
-      ? investors
-          .map((i) => ({ ...i, priority: calculateInvestorPriority(i) }))
-          .sort((a, b) => b.priority - a.priority)
-      : [];
+      ? investorPipeline
+      : investors
+          .slice(0, 0)
+          .map((i) => ({ ...i, priority: calculateInvestorPriority(i), nextAction: "" }));
 
     return {
       role: (isAdmin ? "admin" : "investor") as "admin" | "investor",
       profile: profile ?? null,
       companyProfile,
       metrics: isAdmin ? metrics : [],
+      founderKpis: isAdmin ? founderKpis : founderKpis.slice(0, 3),
       documents: visibleDocs,
+      folders: dataRoomFolders,
       investors: rankedInvestors,
       analytics: isAdmin ? visibleDocs.map((d) => ({ name: d.type, views: d.views })) : [],
       roadmap,
       activity: isAdmin ? activity : [],
+      diligenceRequests: isAdmin
+        ? diligenceRequests
+        : diligenceRequests.filter((r) => r.state !== "Open").slice(0, 1),
+      investorUpdates,
+      githubFeed: isAdmin ? githubFeed : githubFeed.slice(0, 2),
+      productSandbox,
+      fundraisingTasks: isAdmin
+        ? fundraisingTasks
+        : fundraisingTasks.filter((t) => t.state !== "Required"),
     };
   });
 

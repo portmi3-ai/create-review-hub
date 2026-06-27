@@ -4,6 +4,7 @@ import test from "node:test";
 
 const read = (path) => readFileSync(path, "utf8");
 const migrationPath = "supabase/migrations/20260626000000_investor_os_schema.sql";
+const workspaceMigrationPath = "supabase/migrations/20260627000000_investor_os_workspace.sql";
 
 const wiredDocs = [
   "investor-pitch-deck",
@@ -12,6 +13,17 @@ const wiredDocs = [
   "patent-summary",
   "security-roadmap",
   "product-architecture",
+];
+
+const workspaceTokens = [
+  "FounderKpiPanel",
+  "DataRoomFoldersPanel",
+  "DiligenceRequestsPanel",
+  "InvestorPipelinePanel",
+  "InvestorUpdatesPanel",
+  "GithubFeedPanel",
+  "ProductSandboxPanel",
+  "FundraisingTasksPanel",
 ];
 
 test("package scripts support deploy readiness checks", () => {
@@ -129,4 +141,30 @@ test("dashboard exposes document view and download actions", () => {
   assert.match(dashboard, /Download/);
   assert.match(dashboard, /Selected document/);
   assert.match(dashboard, /Diligence checklist/);
+});
+
+test("InvestorOS workspace modules are rendered on the dashboard", () => {
+  const dashboard = read("src/routes/_authenticated/index.tsx");
+  const workspace = read("src/components/investor-os/WorkspacePanels.tsx");
+  assert.match(dashboard, /PlatformWorkspace/);
+  for (const token of workspaceTokens) {
+    assert.match(workspace, new RegExp(token), `missing ${token}`);
+  }
+});
+
+test("workspace persistence migration defines protected InvestorOS tables", () => {
+  const migration = read(workspaceMigrationPath);
+  for (const token of [
+    "public.investor_contacts",
+    "public.diligence_requests",
+    "public.investor_updates",
+    "public.investor_events",
+    "public.product_sandbox_items",
+    "enable row level security",
+    "investor_contacts_admin_all",
+    "investor_updates_select_by_access",
+    "product_sandbox_items_select_authenticated",
+  ]) {
+    assert.match(migration, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
 });

@@ -8,8 +8,18 @@ export const founderKpis = [
 ];
 
 export const dataRoomFolders = [
-  { name: "Executive", count: 5, status: "Ready", description: "Deck, one-pager, investment memo, investor summary, pitch outline" },
-  { name: "Product", count: 3, status: "Ready", description: "Architecture, platform overview, demo narrative" },
+  {
+    name: "Executive",
+    count: 5,
+    status: "Ready",
+    description: "Deck, one-pager, investment memo, investor summary, pitch outline",
+  },
+  {
+    name: "Product",
+    count: 3,
+    status: "Ready",
+    description: "Architecture, platform overview, demo narrative",
+  },
   {
     name: "Security",
     count: 1,
@@ -75,10 +85,34 @@ export const diligenceRequests = [
 ];
 
 export const investorPipeline = [
-  { name: "Healthcare AI Angel", firm: "Independent", stage: "Intro", nextAction: "Send deck + memo", score: 91 },
-  { name: "Digital Health Fund", firm: "Seed Fund", stage: "Diligence", nextAction: "Send security roadmap", score: 88 },
-  { name: "Strategic Hospital Partner", firm: "Innovation Office", stage: "Pilot Review", nextAction: "Book product walkthrough", score: 84 },
-  { name: "Operator Angel", firm: "Former payer executive", stage: "Follow-up", nextAction: "Send prior-auth narrative", score: 79 },
+  {
+    name: "Healthcare AI Angel",
+    firm: "Independent",
+    stage: "Intro",
+    nextAction: "Send deck + memo",
+    score: 91,
+  },
+  {
+    name: "Digital Health Fund",
+    firm: "Seed Fund",
+    stage: "Diligence",
+    nextAction: "Send security roadmap",
+    score: 88,
+  },
+  {
+    name: "Strategic Hospital Partner",
+    firm: "Innovation Office",
+    stage: "Pilot Review",
+    nextAction: "Book product walkthrough",
+    score: 84,
+  },
+  {
+    name: "Operator Angel",
+    firm: "Former payer executive",
+    stage: "Follow-up",
+    nextAction: "Send prior-auth narrative",
+    score: 79,
+  },
 ];
 
 export const investorUpdates = [
@@ -112,17 +146,53 @@ export const investorUpdates = [
 ];
 
 export const githubFeed = [
-  { repo: "create-review-hub", event: "DCB investor documents integrated", status: "Branch", ref: "codex/dcb-investor-docs" },
-  { repo: "create-review-hub", event: "InvestorOS document room wired", status: "Merged", ref: "PR #3" },
-  { repo: "create-review-hub", event: "Deploy readiness finalized", status: "Merged", ref: "PR #2" },
-  { repo: "discharge-bridge-media", event: "Production smoke tests", status: "Evidence", ref: "13/13" },
+  {
+    repo: "create-review-hub",
+    event: "DCB investor documents integrated",
+    status: "Branch",
+    ref: "codex/dcb-investor-docs",
+  },
+  {
+    repo: "create-review-hub",
+    event: "InvestorOS document room wired",
+    status: "Merged",
+    ref: "PR #3",
+  },
+  {
+    repo: "create-review-hub",
+    event: "Deploy readiness finalized",
+    status: "Merged",
+    ref: "PR #2",
+  },
+  {
+    repo: "discharge-bridge-media",
+    event: "Production smoke tests",
+    status: "Evidence",
+    ref: "13/13",
+  },
 ];
 
 export const productSandbox = [
-  { name: "Hospital portal walkthrough", status: "Planned", description: "Investor-safe demo tenant with synthetic referrals." },
-  { name: "SNF matching workflow", status: "Planned", description: "Show matched facilities, readiness, and routing explanation." },
-  { name: "Prior-auth readiness", status: "Planned", description: "Display documentation completeness and next steps." },
-  { name: "Mission Control", status: "Planned", description: "Show operational command center and audit trail." },
+  {
+    name: "Hospital portal walkthrough",
+    status: "Planned",
+    description: "Investor-safe demo tenant with synthetic referrals.",
+  },
+  {
+    name: "SNF matching workflow",
+    status: "Planned",
+    description: "Show matched facilities, readiness, and routing explanation.",
+  },
+  {
+    name: "Prior-auth readiness",
+    status: "Planned",
+    description: "Display documentation completeness and next steps.",
+  },
+  {
+    name: "Mission Control",
+    status: "Planned",
+    description: "Show operational command center and audit trail.",
+  },
 ];
 
 export const fundraisingTasks = [

@@ -6,6 +6,7 @@ const read = (path) => readFileSync(path, "utf8");
 const migrationPath = "supabase/migrations/20260626000000_investor_os_schema.sql";
 const workspaceMigrationPath = "supabase/migrations/20260627000000_investor_os_workspace.sql";
 const dcbDocsMigrationPath = "supabase/migrations/20260627010000_dcb_investor_documents.sql";
+const uploadInviteSchemaPath = "docs/vdr-upload-invite-schema.sql";
 
 const wiredDocs = [
   "investor-pitch-deck",
@@ -197,4 +198,28 @@ test("workspace persistence migration defines protected InvestorOS tables", () =
   ]) {
     assert.match(migration, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
+});
+
+test("VDR upload and invite schema is documented", () => {
+  const schema = read(uploadInviteSchemaPath);
+  for (const token of [
+    "public.document_files",
+    "public.investor_invites",
+    "public.document_access_events",
+    "investor-room-documents",
+    "signed URLs",
+  ]) {
+    assert.match(schema, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+});
+
+test("admin documents page exposes VDR file registration and investor invites", () => {
+  const page = read("src/routes/_authenticated/documents.tsx");
+  const functions = read("src/lib/vdr-admin.functions.ts");
+  assert.match(page, /Register uploaded file/);
+  assert.match(page, /Create invite/);
+  assert.match(page, /registerDocumentFile/);
+  assert.match(page, /createInvestorInvite/);
+  assert.match(functions, /document_files/);
+  assert.match(functions, /investor_invites/);
 });

@@ -1,9 +1,10 @@
+import type { ReactNode } from "react";
 import { Activity, Boxes, CalendarClock, CheckCircle2, ClipboardList, FolderKanban, GitPullRequest, PlaySquare, TrendingUp, Users } from "lucide-react";
 import { getInvestorRoom } from "@/lib/investor-room.functions";
 
 type RoomData = Awaited<ReturnType<typeof getInvestorRoom>>;
 
-function Panel({ eyebrow, title, icon, children, span = false }: { eyebrow: string; title: string; icon: React.ReactNode; children: React.ReactNode; span?: boolean }) {
+function Panel({ eyebrow, title, icon, children, span = false }: { eyebrow: string; title: string; icon: ReactNode; children: ReactNode; span?: boolean }) {
   return (
     <section className={`panel ${span ? "span-2" : ""}`}>
       <div className="panel-heading">

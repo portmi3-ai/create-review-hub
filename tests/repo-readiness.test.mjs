@@ -5,6 +5,7 @@ import test from "node:test";
 const read = (path) => readFileSync(path, "utf8");
 const migrationPath = "supabase/migrations/20260626000000_investor_os_schema.sql";
 const workspaceMigrationPath = "supabase/migrations/20260627000000_investor_os_workspace.sql";
+const dcbDocsMigrationPath = "supabase/migrations/20260627010000_dcb_investor_documents.sql";
 
 const wiredDocs = [
   "investor-pitch-deck",
@@ -13,6 +14,16 @@ const wiredDocs = [
   "patent-summary",
   "security-roadmap",
   "product-architecture",
+];
+
+const dcbDocs = [
+  "dcb-investor-summary",
+  "dcb-one-pager",
+  "dcb-platform-overview",
+  "dcb-pitch-outline",
+  "dcb-gtm-system",
+  "dcb-global-blueprint",
+  "dcb-pricing-offers",
 ];
 
 const workspaceTokens = [
@@ -70,6 +81,15 @@ test("environment template documents required runtime variables", () => {
   ]) {
     assert.match(env, new RegExp(`^${key}=`, "m"), `missing ${key}`);
   }
+});
+
+test("seed data uses the current $2M Seed target", () => {
+  const seed = read("src/data/seed.ts");
+  const platform = read("src/data/platform.ts");
+  assert.match(seed, /raise: "\$2M Seed"/);
+  assert.match(seed, /value: "\$2M"/);
+  assert.match(platform, /value: "\$2M"/);
+  assert.doesNotMatch(seed, /\$1\.5M/);
 });
 
 test("Supabase migration defines required InvestorOS primitives", () => {
@@ -131,6 +151,16 @@ test("virtual data room documents are wired to downloadable content", () => {
   const catalog = read("src/data/investor-documents.ts");
   for (const slug of wiredDocs) {
     assert.match(catalog, new RegExp(slug), `missing catalog entry for ${slug}`);
+    assert.equal(existsSync(`public/docs/${slug}.md`), true, `missing public/docs/${slug}.md`);
+  }
+});
+
+test("DCB source documents are integrated into InvestorOS", () => {
+  const catalog = read("src/data/investor-documents.ts");
+  const migration = read(dcbDocsMigrationPath);
+  for (const slug of dcbDocs) {
+    assert.match(catalog, new RegExp(slug), `missing DCB catalog entry for ${slug}`);
+    assert.match(migration, new RegExp(slug), `missing DCB migration row for ${slug}`);
     assert.equal(existsSync(`public/docs/${slug}.md`), true, `missing public/docs/${slug}.md`);
   }
 });

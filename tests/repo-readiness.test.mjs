@@ -15,7 +15,6 @@ const wiredDocs = [
   "security-roadmap",
   "product-architecture",
 ];
-
 const dcbDocs = [
   "dcb-investor-summary",
   "dcb-one-pager",
@@ -25,7 +24,6 @@ const dcbDocs = [
   "dcb-global-blueprint",
   "dcb-pricing-offers",
 ];
-
 const workspaceTokens = [
   "FounderKpiPanel",
   "DataRoomFoldersPanel",
@@ -35,6 +33,14 @@ const workspaceTokens = [
   "GithubFeedPanel",
   "ProductSandboxPanel",
   "FundraisingTasksPanel",
+];
+const platformFiles = [
+  "src/data/platform-capabilities.ts",
+  "src/data/financial-center.ts",
+  "src/data/media-compliance.ts",
+  "src/data/integration-automation.ts",
+  "src/components/investor-os/FullPlatformPanels.tsx",
+  "docs/full-platform-schema.md",
 ];
 
 test("package scripts support deploy readiness checks", () => {
@@ -177,9 +183,8 @@ test("InvestorOS workspace modules are rendered on the dashboard", () => {
   const dashboard = read("src/routes/_authenticated/index.tsx");
   const workspace = read("src/components/investor-os/WorkspacePanels.tsx");
   assert.match(dashboard, /PlatformWorkspace/);
-  for (const token of workspaceTokens) {
+  for (const token of workspaceTokens)
     assert.match(workspace, new RegExp(token), `missing ${token}`);
-  }
 });
 
 test("workspace persistence migration defines protected InvestorOS tables", () => {
@@ -196,5 +201,39 @@ test("workspace persistence migration defines protected InvestorOS tables", () =
     "product_sandbox_items_select_authenticated",
   ]) {
     assert.match(migration, new RegExp(token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+});
+
+test("full platform modules are present and rendered", () => {
+  for (const file of platformFiles) assert.equal(existsSync(file), true, `missing ${file}`);
+  const dashboard = read("src/routes/_authenticated/index.tsx");
+  const panels = read("src/components/investor-os/FullPlatformPanels.tsx");
+  assert.match(dashboard, /FullPlatformPanels/);
+  for (const token of [
+    "Financial center",
+    "Compliance center",
+    "Media center",
+    "Automation",
+    "Integrations",
+    "InvestorOS capability map",
+  ]) {
+    assert.match(panels, new RegExp(token));
+  }
+});
+
+test("full platform schema roadmap covers production systems", () => {
+  const schema = read("docs/full-platform-schema.md");
+  for (const token of [
+    "document_files",
+    "nda_acceptances",
+    "investor_tasks",
+    "diligence_requests",
+    "document_chunks",
+    "fundraising_rounds",
+    "media_assets",
+    "integration_connections",
+    "automation_rules",
+  ]) {
+    assert.match(schema, new RegExp(token));
   }
 });

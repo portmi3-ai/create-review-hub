@@ -16,6 +16,7 @@ import {
   Shield,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { FullPlatformPanels } from "@/components/investor-os/FullPlatformPanels";
 import { PlatformWorkspace } from "@/components/investor-os/PlatformWorkspace";
 import { supabase } from "@/integrations/supabase/client";
 import { askConcierge } from "@/lib/ai";
@@ -106,8 +107,8 @@ function InvestorRoomPage() {
           <strong>{data.companyProfile.tagline}</strong>
           <small>
             {isAdmin
-              ? "Admin view · full VDR · CRM · analytics · audit"
-              : "Investor view · NDA-tier documents · roadmap · updates · AI concierge"}
+              ? "Admin view · VDR · CRM · analytics · compliance · integrations"
+              : "Investor view · documents · updates · roadmap · AI concierge"}
           </small>
         </div>
       </section>
@@ -118,9 +119,8 @@ function InvestorRoomPage() {
           <h2>You are signed in as an investor</h2>
           <p>
             Investor accounts see Public/NDA documents, updates, roadmap, product sandbox
-            milestones, engineering feed, and AI diligence. Admin-only CRM, full metrics, restricted
-            documents, and data requests appear after your user is assigned the admin role in
-            Supabase.
+            milestones, engineering feed, and AI diligence. Admin-only CRM, metrics, compliance, and
+            integration controls appear after your user is assigned the admin role in Supabase.
           </p>
         </section>
       )}
@@ -136,6 +136,7 @@ function InvestorRoomPage() {
       <section className="grid">
         <DataRoom docs={data.documents} isAdmin={isAdmin} />
         <PlatformWorkspace data={data} isAdmin={isAdmin} />
+        <FullPlatformPanels isAdmin={isAdmin} />
         {isAdmin && data.analytics.length > 0 && <AnalyticsPanel analytics={data.analytics} />}
         <Concierge />
         <RoadmapPanel roadmap={data.roadmap} />
@@ -143,8 +144,8 @@ function InvestorRoomPage() {
       </section>
 
       <footer>
-        <FileText size={16} /> InvestorOS — role-gated VDR, CRM, analytics, updates, sandbox and AI
-        diligence concierge.
+        <FileText size={16} /> InvestorOS — VDR, CRM, analytics, compliance, financial center,
+        integrations and AI diligence concierge.
       </footer>
     </main>
   );
